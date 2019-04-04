@@ -35,4 +35,7 @@ public class Page {
     private void page4(Graphics2D g2d) {
 
     }
+    private void page5(Graphics2D g2d){
+
+    }
 }
