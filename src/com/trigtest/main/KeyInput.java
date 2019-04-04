@@ -79,10 +79,12 @@ public class KeyInput extends KeyAdapter {
 					}
 					if(Problem.interpretAnswer) {
 						++Problem.n_correct;
-						AudioPlayer.getSound("pass").play();
+						if(Menu.sound)
+							AudioPlayer.getSound("pass").play();
 					} else {
 						++Problem.n_incorrect;
-						AudioPlayer.getSound("fail").play();
+						if(Menu.sound)
+							AudioPlayer.getSound("fail").play();
 					}
 					
 					dontPress = true;

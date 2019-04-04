@@ -20,6 +20,11 @@ public class Page {
         for(int i = 0; i <= pageCount; ++i){
             picList.add(resize(new ImageIcon("assets/pages/" + i + ".png").getImage()));
         }
+
+        FadingImage confetti = new FadingImage(resize(new ImageIcon("assets/gameWin.gif").getImage()));
+        confetti.drawFadingImage(g2d);
+        confetti.startFade();
+
         switch(page){
             case 0: g2d.drawImage(picList.get(0), 0, 0, null); break;
             case 1: g2d.drawImage(picList.get(1), 0, 0, null); break;

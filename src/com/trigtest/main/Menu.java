@@ -35,17 +35,19 @@ public class Menu extends MouseAdapter {
 		this.game = game;
 		this.handler = handler;
 	}
-	
+
 	int i = 1;
 	Image image = null;
 	boolean reverse = false;
 	boolean drawTemp = true;
-	
+
 	//ACTUAL DEFAULT VALUES STORED HERE
 	static int difficulty = 1; //0 = normal, 1 = hard, 2 = abyssal
 	static int mode = 1; //0 = timed, 1 = accuracy, 2 = endless
 	static int amtOfQ = 30;
-	
+
+	static boolean sound = true;
+
 	int page = 0; //tutorial pages
 	Page onPage;
 	int time;
@@ -172,10 +174,12 @@ public class Menu extends MouseAdapter {
 				mode = 2;
 			} else if(mouseOver(mouseX, mouseY, on) && !selectedSound.equals(on)) {
 				selectedSound = on;
+				sound = true;
 				AudioPlayer.loadMusic();
 				AudioPlayer.getMusic("backgroundLoop").loop();
 			} else if(mouseOver(mouseX, mouseY, off) && !selectedSound.equals(off)) {
 				selectedSound = off;
+				sound = false;
 				AudioPlayer.stop();
 			} else if(mode == 0) {
 				if(mouseOver(mouseX, mouseY, minutesTop)) {
@@ -380,16 +384,17 @@ public class Menu extends MouseAdapter {
 			}
 			
 			if(game.gameState == STATE.End) {
+				FadingImage confetti = new FadingImage(resize(new ImageIcon("assets/gameWin.gif").getImage(), 634, 641));
 				g2d.setColor(Color.BLACK);
 				Font font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/math-credits.otf"));
 				Font font1 = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/math-menu-bold.otf"));
 				ge.registerFont(font); ge.registerFont(font1);
-				
-				
+
 				if(mode == 0) {
 					drawEnd(g2d, font, font1);
 				} else if(mode == 1) {
 					handler.clearGame();
+					drawConfetti(g2d, confetti);
 					g2d.setFont(font.deriveFont(32.0f));
 					FontMetrics m = g2d.getFontMetrics(); 
 					g2d.drawString("You scored a: ", Game.WIDTH/2 - m.stringWidth("You scored a: ")/2, 120);
@@ -428,9 +433,21 @@ public class Menu extends MouseAdapter {
 			e.printStackTrace();
 		}
 	}
-	
+
+	private void drawConfetti(Graphics2D g2d, FadingImage i){
+		i.drawFadingImage(g2d);
+		new Timer().schedule(
+				new TimerTask() {
+					public void run() {
+						i.startFade();
+					}
+				}, 1000
+		);
+	}
+
 	private void drawEnd(Graphics2D g2d, Font f, Font f1) {
 		handler.clearGame();
+
 		String endMessage = "In " + Problem.toMS(time) + ", you answered ";
 		g2d.setFont(f.deriveFont(28.0f));
 		

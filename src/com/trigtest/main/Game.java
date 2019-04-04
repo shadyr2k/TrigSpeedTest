@@ -23,7 +23,7 @@ public class Game extends Canvas implements Runnable {
 		Options,
 		Tutorial,
 		End
-	};
+	}
 	
 	public STATE gameState = STATE.Menu;
 	
@@ -84,14 +84,14 @@ public class Game extends Canvas implements Runnable {
 		handler.render(g);
 		if(gameState == STATE.Menu || gameState == STATE.Credits || gameState == STATE.Options || gameState == STATE.Tutorial || gameState == STATE.End) {
 			menu.render(g); 
-		} 
+		}
 		g.dispose();
 		b.show();
 	}
 	
 	public Game() {
 		new Window(WIDTH, HEIGHT, "Trigonometry Speed Tests", this);
-		
+
 		handler = new Handler();
 		menu = new Menu(this, handler);
 
