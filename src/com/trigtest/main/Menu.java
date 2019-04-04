@@ -47,6 +47,7 @@ public class Menu extends MouseAdapter {
 	static int amtOfQ = 30;
 	
 	int page = 0; //tutorial pages
+	Page onPage;
 	int time;
 	
 	static int minutes = 5;
@@ -208,7 +209,7 @@ public class Menu extends MouseAdapter {
 				}
 			}
 		} else if(game.gameState == STATE.Tutorial) {
-			if(mouseOver(mouseX, mouseY, next)) ++page;
+			if(mouseOver(mouseX, mouseY, next) && page < 5) ++page;
 			else if(mouseOver(mouseX, mouseY, back) && page > 0) --page;
 		} else if(game.gameState == STATE.End) {
 			if(mouseOver(mouseX, mouseY, endBack)) {
@@ -403,8 +404,10 @@ public class Menu extends MouseAdapter {
 				g2d.setColor(Color.BLACK);
 				g2d.drawString("back", 35, 600);
 				g2d.drawString("next", 480, 600);
+				g2d.drawString("menu", 250, 600);
 
-				g2d.setFont(font1.deriveFont(28.0f));
+				onPage = new Page(g2d, page);
+				onPage.drawPage();
 
 				//backButton(g2d);
 			} 
