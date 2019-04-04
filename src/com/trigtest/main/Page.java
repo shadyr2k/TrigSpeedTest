@@ -9,7 +9,7 @@ public class Page {
     private int page;
     private Graphics2D g2d;
 
-    private ArrayList<Image> picList = new ArrayList<Image>();
+    private ArrayList<Image> picList = new ArrayList<>();
 
     public Page(Graphics2D g2d, int page){
         this.page = page;

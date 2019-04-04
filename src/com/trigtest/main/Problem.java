@@ -159,7 +159,7 @@ public class Problem extends GameObject {
 	 */	
 	private String getFunction(int diff) {
 		Random r = new Random();
-		int layer1 = (int) r.nextInt(2) + 1; //conversion problem or calculation problem
+		int layer1 = r.nextInt(2) + 1; //conversion problem or calculation problem
 		String[] functions = {"sin", "cos", "tan", "sec", "csc", "cot"}; 
 		String[] invFunctions = {"arcsin", "arccos", "arctan", "arcsec", "arccsc", "arccot"};
 
@@ -191,14 +191,14 @@ public class Problem extends GameObject {
 		if(diff == 0)
 			functions[3] = "sin"; functions[4] = "cos"; functions[5] = "tan"; //this is whatever for now
 		if(layer1 == 1) {
-			int layer2 = (int) r.nextInt(2) + 1; //radian or degree (again)	
-			if(layer2 == 1) return (String) keys[(int) r.nextInt(keys.length)];
-			else return radDeg.get(keys[(int) r.nextInt(keys.length)]);
+			int layer2 = r.nextInt(2) + 1; //radian or degree (again)
+			if(layer2 == 1) return (String) keys[r.nextInt(keys.length)];
+			else return radDeg.get(keys[r.nextInt(keys.length)]);
 		} else {
-			if(diff != 2) return functions[r.nextInt(functions.length)] + "(" + ((r.nextInt(2)+1 == 2) ? (String) keys[(int) r.nextInt(keys.length)] : radDeg.get(keys[(int) r.nextInt(keys.length)])) + ")";
-			int layer2 = (int) r.nextInt(2) + 1; //regular or inverse
+			if(diff != 2) return functions[r.nextInt(functions.length)] + "(" + ((r.nextInt(2)+1 == 2) ? (String) keys[r.nextInt(keys.length)] : radDeg.get(keys[(int) r.nextInt(keys.length)])) + ")";
+			int layer2 = r.nextInt(2) + 1; //regular or inverse
 			if(layer2 == 1) {
-				return functions[r.nextInt(functions.length)] + "(" + ((r.nextInt(2)+1 == 2) ? (String) keys[(int) r.nextInt(keys.length)] : radDeg.get(keys[(int) r.nextInt(keys.length)])) + ")";
+				return functions[r.nextInt(functions.length)] + "(" + ((r.nextInt(2)+1 == 2) ? (String) keys[r.nextInt(keys.length)] : radDeg.get(keys[(int) r.nextInt(keys.length)])) + ")";
 			} else {
 				String choice = invFunctions[r.nextInt(invFunctions.length)]; //sin/cos/tan or csc/sec/cot
 				String neg = (r.nextInt(2)+1) == 1 ? "-" : "";

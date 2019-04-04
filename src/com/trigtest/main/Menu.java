@@ -118,6 +118,7 @@ public class Menu extends MouseAdapter {
 	//tutorial buttons
 	private Rectangle back = new Rectangle(20, 550, 150, 75);
 	private Rectangle next = new Rectangle(465, 550, 150, 75);
+	private Rectangle menu = new Rectangle(243, 595, 154, 48);
 
 	public void mousePressed(MouseEvent e) {
 		int mouseX = e.getX();
@@ -211,6 +212,10 @@ public class Menu extends MouseAdapter {
 		} else if(game.gameState == STATE.Tutorial) {
 			if(mouseOver(mouseX, mouseY, next) && page < 5) ++page;
 			else if(mouseOver(mouseX, mouseY, back) && page > 0) --page;
+			else if(mouseOver(mouseX, mouseY, menu)) {
+				System.out.println("hi");
+				game.gameState = STATE.Menu;
+			}
 		} else if(game.gameState == STATE.End) {
 			if(mouseOver(mouseX, mouseY, endBack)) {
 				game.gameState = STATE.Menu;
@@ -351,9 +356,9 @@ public class Menu extends MouseAdapter {
 				if(mode == 0) {
 					Image timePanel = resize(new ImageIcon("assets/sprites/clement.png").getImage(), 172, 99);
 					g2d.drawImage(timePanel, 240, 315, null);
-					g2d.drawString(Integer.toString(minutes),  (int) minutes_0.x + (minutes_0.width - m3.stringWidth(Integer.toString(minutes))) / 2, 377);
-					g2d.drawString(Integer.toString(seconds1), (int) seconds1_0.x + (seconds1_0.width - m3.stringWidth(Integer.toString(seconds1))) / 2, 377);
-					g2d.drawString(Integer.toString(seconds2), (int) seconds2_0.x + (seconds2_0.width - m3.stringWidth(Integer.toString(seconds2))) / 2, 377);
+					g2d.drawString(Integer.toString(minutes),  minutes_0.x + (minutes_0.width - m3.stringWidth(Integer.toString(minutes))) / 2, 377);
+					g2d.drawString(Integer.toString(seconds1), seconds1_0.x + (seconds1_0.width - m3.stringWidth(Integer.toString(seconds1))) / 2, 377);
+					g2d.drawString(Integer.toString(seconds2), seconds2_0.x + (seconds2_0.width - m3.stringWidth(Integer.toString(seconds2))) / 2, 377);
 					
 					int time = Menu.minutes*60 + Integer.parseInt(Menu.seconds1 + "" + Menu.seconds2);
 					KeyInput.interval = (time < 1) ? 1 : time;
@@ -361,8 +366,8 @@ public class Menu extends MouseAdapter {
 				} else if(mode == 1) {
 					Image questionPanel = resize(new ImageIcon("assets/sprites/camille.png").getImage(), 172, 99);
 					g2d.drawImage(questionPanel, 240, 315, null);
-					g2d.drawString(Integer.toString(tens),  (int) tens_0.x + (tens_0.width - m3.stringWidth(Integer.toString(tens))) / 2, 377);
-					g2d.drawString(Integer.toString(ones), (int) ones_0.x + (ones_0.width - m3.stringWidth(Integer.toString(ones))) / 2, 377);
+					g2d.drawString(Integer.toString(tens),  tens_0.x + (tens_0.width - m3.stringWidth(Integer.toString(tens))) / 2, 377);
+					g2d.drawString(Integer.toString(ones), ones_0.x + (ones_0.width - m3.stringWidth(Integer.toString(ones))) / 2, 377);
 					
 					amtOfQ = (amtOfQ < 1) ? 1 : tens*10 + ones;
 				}
