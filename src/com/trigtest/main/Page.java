@@ -20,33 +20,15 @@ public class Page {
             picList.add(resize(new ImageIcon("assets/pages/" + i + ".png").getImage(), 634, 641));
         }
         switch(page){
-            case 0: page0(g2d); break;
-            case 1: page1(g2d); break;
-            case 2: page2(g2d); break;
-            case 3: page3(g2d); break;
-            case 4: page4(g2d); break;
-            case 5: page5(g2d); break;
+            case 0: g2d.drawImage(picList.get(0), 0, 0, null); break;
+            case 1: g2d.drawImage(picList.get(1), 0, 0, null); break;
+            case 2: g2d.drawImage(picList.get(2), 0, 0, null); break;
+            case 3: g2d.drawImage(picList.get(3), 0, 0, null); break;
+            case 4: g2d.drawImage(picList.get(4), 0, 0, null); break;
+            case 5: g2d.drawImage(picList.get(5), 0, 0, null); break;
         }
     }
 
-    private void page0(Graphics2D g2d){
-        g2d.drawImage(picList.get(0), 0, 0, null);
-    }
-    private void page1(Graphics2D g2d){
-        g2d.drawImage(picList.get(1), 0, 0, null);
-    }
-    private void page2(Graphics2D g2d){
-        g2d.drawImage(picList.get(2), 0, 0, null);
-    }
-    private void page3(Graphics2D g2d){
-        g2d.drawImage(picList.get(3), 0, 0, null);
-    }
-    private void page4(Graphics2D g2d) {
-        g2d.drawImage(picList.get(4), 0, 0, null);
-    }
-    private void page5(Graphics2D g2d){
-        g2d.drawImage(picList.get(5), 0, 0, null);
-    }
     private Image resize(Image i, int w, int h) {
         BufferedImage r = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = r.createGraphics();
