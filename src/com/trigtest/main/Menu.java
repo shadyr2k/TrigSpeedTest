@@ -118,7 +118,7 @@ public class Menu extends MouseAdapter {
 	//tutorial buttons
 	private Rectangle back = new Rectangle(20, 550, 150, 75);
 	private Rectangle next = new Rectangle(465, 550, 150, 75);
-	private Rectangle menu = new Rectangle(243, 595, 154, 48);
+	private Rectangle menu = new Rectangle(243, 564, 154, 48);
 
 	public void mousePressed(MouseEvent e) {
 		int mouseX = e.getX();
@@ -170,10 +170,13 @@ public class Menu extends MouseAdapter {
 			} else if(mouseOver(mouseX, mouseY, endless)) {
 				selectedMode = endless;
 				mode = 2;
-			} else if(mouseOver(mouseX, mouseY, on)) {
-			    selectedSound = on;
-			} else if(mouseOver(mouseX, mouseY, off)) {
+			} else if(mouseOver(mouseX, mouseY, on) && !selectedSound.equals(on)) {
+				selectedSound = on;
+				AudioPlayer.loadMusic();
+				AudioPlayer.getMusic("backgroundLoop").loop();
+			} else if(mouseOver(mouseX, mouseY, off) && !selectedSound.equals(off)) {
 				selectedSound = off;
+				AudioPlayer.stop();
 			} else if(mode == 0) {
 				if(mouseOver(mouseX, mouseY, minutesTop)) {
 					if(minutes == 9) minutes = 0;
@@ -211,11 +214,11 @@ public class Menu extends MouseAdapter {
 			}
 		} else if(game.gameState == STATE.Tutorial) {
 			if(mouseOver(mouseX, mouseY, next) && page < 5) ++page;
+			else if(mouseOver(mouseX, mouseY, next) && page == 5) game.gameState = STATE.Options;
 			else if(mouseOver(mouseX, mouseY, back) && page > 0) --page;
-			else if(mouseOver(mouseX, mouseY, menu)) {
-				System.out.println("hi");
-				game.gameState = STATE.Menu;
-			}
+			else if(mouseOver(mouseX, mouseY, menu))
+				game.gameState = STATE.Options;
+
 		} else if(game.gameState == STATE.End) {
 			if(mouseOver(mouseX, mouseY, endBack)) {
 				game.gameState = STATE.Menu;
@@ -278,7 +281,7 @@ public class Menu extends MouseAdapter {
 				g2d.drawString("Victor Nguyen (making me do this)", 45, 480);
 				g2d.drawString("Eunice Moon/Lee (inspiration)", 45, 500);
 				g2d.drawString("Nick Lopatin (huge help)", 45, 520);
-				g2d.drawString("Cornelia Penn (<3)", 45, 540);
+				g2d.drawString("Cornelia Penn (i love you <3)", 45, 540);
 				g2d.drawString("Camille Boiteux (much inspiration)", 45, 560);
 				
 				g2d.drawString("Mari Yanagawa", 360, 200);
@@ -407,8 +410,13 @@ public class Menu extends MouseAdapter {
 				
 				g2d.setFont(font1.deriveFont(48.0f));
 				g2d.setColor(Color.BLACK);
-				g2d.drawString("back", 35, 600);
+				if(page != 0)
+					g2d.drawString("back", 35, 600);
+				if(page != 5)
 				g2d.drawString("next", 480, 600);
+				if(page == 5)
+					g2d.drawString("done", 480, 600);
+
 				g2d.drawString("menu", 250, 600);
 
 				onPage = new Page(g2d, page);

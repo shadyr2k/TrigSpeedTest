@@ -29,4 +29,10 @@ public class AudioPlayer {
     public static Sound getSound(String k){
         return soundMap.get(k);
     }
+
+    public static void stop(){
+        musicMap.get("backgroundLoop").stop();
+        musicMap.clear();
+        soundMap.clear();
+    }
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Page {
     private int page;
     private Graphics2D g2d;
+    private final static int pageCount = 5;
 
     private ArrayList<Image> picList = new ArrayList<>();
 
@@ -16,8 +17,8 @@ public class Page {
         this.g2d = g2d;
     }
     public void drawPage(){
-        for(int i = 0; i <= 5; ++i){
-            picList.add(resize(new ImageIcon("assets/pages/" + i + ".png").getImage(), 634, 641));
+        for(int i = 0; i <= pageCount; ++i){
+            picList.add(resize(new ImageIcon("assets/pages/" + i + ".png").getImage()));
         }
         switch(page){
             case 0: g2d.drawImage(picList.get(0), 0, 0, null); break;
@@ -29,10 +30,10 @@ public class Page {
         }
     }
 
-    private Image resize(Image i, int w, int h) {
-        BufferedImage r = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+    private Image resize(Image i) {
+        BufferedImage r = new BufferedImage(634, 641, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = r.createGraphics();
-        g2d.drawImage(i, 0, 0, w, h, null);
+        g2d.drawImage(i, 0, 0, 634, 641, null);
         g2d.dispose();
         return r;
     }

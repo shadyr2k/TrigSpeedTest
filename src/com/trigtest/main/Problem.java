@@ -272,8 +272,8 @@ public class Problem extends GameObject {
 	public static String toMS(int i) {
 		int m = i/60;
 		int s = i%60;
-		String se = (s <= 9) ? "0"+s : ""+s;
-		return m + ":" + se;
+		String sec = (s <= 9) ? "0"+s : ""+s;
+		return m + ":" + sec;
 	}
 
 	public void tick() {}
