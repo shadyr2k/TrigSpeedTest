@@ -1,6 +1,6 @@
 package com.trigtest.main;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
@@ -32,7 +32,7 @@ public class KeyInput extends KeyAdapter {
 	
 	static boolean dontPress = false;
 	static int interval = 300; //default timer value set in Menu class
-	
+
 	public void keyPressed(KeyEvent e){
 		//System.out.print(e.getKeyChar() + " ");
 		if(game.gameState == STATE.Game) {

@@ -2,16 +2,12 @@ package com.trigtest.main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class FadingImage implements ActionListener {
+public class FadingImage {
 
     private Image image;
 
-    private final int time = 500; //in ms
     private float alpha = 1f;
-    private Timer timer = new Timer(time, this);
 
     public FadingImage(Image image){
         this.image = image;
@@ -22,17 +18,17 @@ public class FadingImage implements ActionListener {
         g2d.drawImage(image, 0, 0, null);
     }
 
-    public void startFade(){
-        timer.start();
+    public void delFadingImage(){
+        image = new ImageIcon("assets/blank_.png").getImage();
     }
 
-    public void actionPerformed(ActionEvent e){
-        alpha -= 0.1f;
-        if(alpha <= 0) {
-            timer.stop();
-            alpha = 0;
-        }
+    public void decrAlpha(Float f){
+        alpha -= f;
         System.out.println(alpha);
+    }
+
+    public Float getAlpha(){
+        return alpha;
     }
 
 }

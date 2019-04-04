@@ -3,7 +3,6 @@ package com.trigtest.main;
 import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-import java.io.File;
 
 public class Game extends Canvas implements Runnable {
 	

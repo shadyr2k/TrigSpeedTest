@@ -30,6 +30,8 @@ public class Menu extends MouseAdapter {
 	
 	private Game game;
 	private Handler handler;
+	private FadingImage confetti;
+	private boolean createdConfetti = false;
 
 	public Menu(Game game, Handler handler) {
 		this.game = game;
@@ -384,7 +386,16 @@ public class Menu extends MouseAdapter {
 			}
 			
 			if(game.gameState == STATE.End) {
-				FadingImage confetti = new FadingImage(resize(new ImageIcon("assets/gameWin.gif").getImage(), 634, 641));
+				Graphics2D g2d_confetti = (Graphics2D) g;
+				if(!createdConfetti) {
+					confetti = new FadingImage(resize(new ImageIcon("assets/gameWin.gif").getImage(), 634, 641));
+					createdConfetti = true;
+				}
+				confetti.drawFadingImage(g2d_confetti);
+				/*if(Float.compare(confetti.getAlpha(), 0.1f) > 0)
+					confetti.decrAlpha(0.05f);
+				else confetti.delFadingImage();*/
+
 				g2d.setColor(Color.BLACK);
 				Font font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/math-credits.otf"));
 				Font font1 = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/math-menu-bold.otf"));
@@ -394,7 +405,6 @@ public class Menu extends MouseAdapter {
 					drawEnd(g2d, font, font1);
 				} else if(mode == 1) {
 					handler.clearGame();
-					drawConfetti(g2d, confetti);
 					g2d.setFont(font.deriveFont(32.0f));
 					FontMetrics m = g2d.getFontMetrics(); 
 					g2d.drawString("You scored a: ", Game.WIDTH/2 - m.stringWidth("You scored a: ")/2, 120);
@@ -432,17 +442,6 @@ public class Menu extends MouseAdapter {
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private void drawConfetti(Graphics2D g2d, FadingImage i){
-		i.drawFadingImage(g2d);
-		new Timer().schedule(
-				new TimerTask() {
-					public void run() {
-						i.startFade();
-					}
-				}, 1000
-		);
 	}
 
 	private void drawEnd(Graphics2D g2d, Font f, Font f1) {
