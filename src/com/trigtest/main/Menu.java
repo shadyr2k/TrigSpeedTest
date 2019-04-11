@@ -30,8 +30,9 @@ public class Menu extends MouseAdapter {
 	
 	private Game game;
 	private Handler handler;
-	private FadingImage confetti;
-	private boolean createdConfetti = false;
+
+	public static FadingImage confetti;
+	public static boolean drawConfetti = true;
 
 	public Menu(Game game, Handler handler) {
 		this.game = game;
@@ -384,17 +385,11 @@ public class Menu extends MouseAdapter {
 				backButton(g2d, 40, 38);
 			
 			}
-			
 			if(game.gameState == STATE.End) {
-				Graphics2D g2d_confetti = (Graphics2D) g;
-				if(!createdConfetti) {
-					confetti = new FadingImage(resize(new ImageIcon("assets/gameWin.gif").getImage(), 634, 641));
-					createdConfetti = true;
-				}
-				confetti.drawFadingImage(g2d_confetti);
-				/*if(Float.compare(confetti.getAlpha(), 0.1f) > 0)
-					confetti.decrAlpha(0.05f);
-				else confetti.delFadingImage();*/
+				Graphics2D g2d_c = (Graphics2D) g;
+				confetti.drawFadingImage(g2d_c);
+				if(drawConfetti)
+					confetti.fadeImage();
 
 				g2d.setColor(Color.BLACK);
 				Font font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/math-credits.otf"));
@@ -473,7 +468,7 @@ public class Menu extends MouseAdapter {
 		return false;
 	}
 	
-	private Image resize(Image i, int w, int h) {
+	public static Image resize(Image i, int w, int h) {
 		BufferedImage r = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 	    Graphics2D g2d = r.createGraphics();
 	    g2d.drawImage(i, 0, 0, w, h, null);

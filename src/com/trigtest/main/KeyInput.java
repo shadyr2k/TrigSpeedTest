@@ -13,6 +13,8 @@ import com.trigtest.main.Game.STATE;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
+import javax.swing.*;
+
 public class KeyInput extends KeyAdapter {
 	
 	private Game game;
@@ -36,6 +38,7 @@ public class KeyInput extends KeyAdapter {
 	public void keyPressed(KeyEvent e){
 		//System.out.print(e.getKeyChar() + " ");
 		if(game.gameState == STATE.Game) {
+			Menu.confetti = new FadingImage(Menu.resize(new ImageIcon("assets/gameWin.gif").getImage(), 634, 641));
 			if(!dontPress) {
 				if(Problem.drawString && e.getKeyChar() == '/') Problem.printString += "/"; 
 				else if(Problem.drawString && e.getKeyChar() == '-') Problem.printString += "-";
@@ -90,8 +93,8 @@ public class KeyInput extends KeyAdapter {
 					dontPress = true;
 					
 					if(Menu.mode != 0) {
-						new java.util.Timer().schedule(
-							new java.util.TimerTask() {
+						new Timer().schedule(
+							new TimerTask() {
 								public void run() { 
 									if(Menu.mode == 1 && Problem.count == Menu.amtOfQ) { //if accuracy mode and reached amount of questions
 										game.gameState = STATE.End;
