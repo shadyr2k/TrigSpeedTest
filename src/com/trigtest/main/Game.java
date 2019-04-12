@@ -100,7 +100,7 @@ public class Game extends Canvas implements Runnable {
 		handler.addObject(new BG(0, 0, ID.BG));
 		if(gameState == STATE.Game) {	
 			handler.addObject(new Problem(0, 0, ID.Problem));
-		} 
+		}
 		this.addKeyListener(new KeyInput(this, handler));	
 		this.addMouseListener(menu);
 	}

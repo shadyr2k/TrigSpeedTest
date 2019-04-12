@@ -33,16 +33,17 @@ public class Menu extends MouseAdapter {
 
 	public static FadingImage confetti;
 	public static boolean drawConfetti = true;
+	public static boolean drawEnd = true;
 
 	public Menu(Game game, Handler handler) {
 		this.game = game;
 		this.handler = handler;
 	}
 
-	int i = 1;
-	Image image = null;
-	boolean reverse = false;
-	boolean drawTemp = true;
+	static int i = 1;
+	static Image image = null;
+	static boolean reverse = false;
+	static boolean drawTemp = true;
 
 	//ACTUAL DEFAULT VALUES STORED HERE
 	static int difficulty = 1; //0 = normal, 1 = hard, 2 = abyssal
@@ -53,7 +54,8 @@ public class Menu extends MouseAdapter {
 
 	int page = 0; //tutorial pages
 	Page onPage;
-	int time;
+
+	static int time;
 	
 	static int minutes = 5;
 	static int seconds1 = 0;
@@ -142,6 +144,8 @@ public class Menu extends MouseAdapter {
 			} else if(mouseOver(mouseX, mouseY, play)) {
 				game.gameState = STATE.Game;
 				handler.addObject(new Problem(0, 0, ID.Problem));
+				AudioPlayer.stop("backgroundLoop");
+				AudioPlayer.getMusic("gameLoop").loop();
 				time = KeyInput.interval;
 			}
 		} else if(game.gameState == STATE.Options) {
@@ -183,7 +187,8 @@ public class Menu extends MouseAdapter {
 			} else if(mouseOver(mouseX, mouseY, off) && !selectedSound.equals(off)) {
 				selectedSound = off;
 				sound = false;
-				AudioPlayer.stop();
+				AudioPlayer.stop("backgroundLoop");
+				AudioPlayer.resetSound();
 			} else if(mode == 0) {
 				if(mouseOver(mouseX, mouseY, minutesTop)) {
 					if(minutes == 9) minutes = 0;
@@ -386,32 +391,13 @@ public class Menu extends MouseAdapter {
 			
 			}
 			if(game.gameState == STATE.End) {
-				Graphics2D g2d_c = (Graphics2D) g;
-				confetti.drawFadingImage(g2d_c);
+				if(drawEnd){
+					handler.addObject(new EndBG(0, 0, ID.EndBG, mode, handler));
+				}
+
+				confetti.drawFadingImage(g2d);
 				if(drawConfetti)
 					confetti.fadeImage();
-
-				g2d.setColor(Color.BLACK);
-				Font font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/math-credits.otf"));
-				Font font1 = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/math-menu-bold.otf"));
-				ge.registerFont(font); ge.registerFont(font1);
-
-				if(mode == 0) {
-					drawEnd(g2d, font, font1);
-				} else if(mode == 1) {
-					handler.clearGame();
-					g2d.setFont(font.deriveFont(32.0f));
-					FontMetrics m = g2d.getFontMetrics(); 
-					g2d.drawString("You scored a: ", Game.WIDTH/2 - m.stringWidth("You scored a: ")/2, 120);
-					
-					g2d.setFont(font1.deriveFont(42.0f));
-					FontMetrics m1 = g2d.getFontMetrics();
-					g2d.drawString(Problem.n_correct + " / " + amtOfQ, Game.WIDTH/2 - m1.stringWidth(Problem.count + " / " + amtOfQ)/2, 170);
-				} else if(mode == 2) {
-					//do i really want this?
-				}
-				
-				backButton(g2d, 45, 528);
 			}
 			if(game.gameState == STATE.Tutorial) {
 				Font font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/math-credits.otf"));
@@ -439,26 +425,7 @@ public class Menu extends MouseAdapter {
 		}
 	}
 
-	private void drawEnd(Graphics2D g2d, Font f, Font f1) {
-		handler.clearGame();
 
-		String endMessage = "In " + Problem.toMS(time) + ", you answered ";
-		g2d.setFont(f.deriveFont(28.0f));
-		
-		FontMetrics m = g2d.getFontMetrics(); 
-		g2d.drawString("Game Over!", Game.WIDTH/2 - m.stringWidth("Game Over!")/2, 80);
-		g2d.drawString(endMessage, Game.WIDTH/2 - m.stringWidth(endMessage)/2, 120);
-
-		g2d.setFont(f1.deriveFont(42.0f));
-		FontMetrics m1 = g2d.getFontMetrics();
-		g2d.drawString((Problem.n_correct + Problem.n_incorrect) + " questions", Game.WIDTH/2 - m1.stringWidth((Problem.n_correct + Problem.n_incorrect) + " questions")/2, 170);
-		g2d.setFont(f.deriveFont(28.0f));
-		g2d.drawString("with an accuracy of: ", Game.WIDTH/2 - m.stringWidth("with an accuracy of: ")/2, 240);
-		g2d.setFont(f1.deriveFont(42.0f));
-		g2d.drawString(Problem.n_correct + " / " + (Problem.n_correct + Problem.n_incorrect), Game.WIDTH/2 - m1.stringWidth(Problem.n_correct + " / " + (Problem.n_correct + Problem.n_incorrect))/2, 290);
-		g2d.drawString("= " + (int) Math.ceil(((double) Problem.n_correct/(double) (Problem.n_correct + Problem.n_incorrect) * 100)) + "%", Game.WIDTH/2 - m1.stringWidth("= " + (int) Math.ceil(((double) Problem.n_correct/(double) (Problem.n_correct + Problem.n_incorrect) * 100)) + "%")/2, 330);
-	}
-	
 	private boolean mouseOver(int mouseX, int mouseY, Rectangle r) {
 		if(mouseX > r.getX() && mouseX < r.getX() + r.getWidth()) {
 			if(mouseY > r.getY() && mouseY < r.getY() + r.getHeight())
@@ -476,7 +443,7 @@ public class Menu extends MouseAdapter {
 	    return r; 
 	}
 	
-	private void backButton(Graphics2D g2d, int x, int y) {
+	public static void backButton(Graphics2D g2d, int x, int y) {
 		if(i > 25) reverse = true;
 		else if(i < 2) reverse = false;
 		
