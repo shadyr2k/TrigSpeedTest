@@ -26,11 +26,20 @@ public class Handler {
 	public void removeObject(GameObject obj){
 		this.object.remove(obj);
 	}
-	
+
+	//cant remove wtf
 	public void clearGame() {
 		for(int i = 0; i < object.size(); ++i) {
 			GameObject g = object.get(i);
 			if(g.getID() == ID.Problem) {
+				object.remove(i);
+			}
+		}
+	}
+	public void clearEndBG() {
+		for(int i = 0; i < object.size(); ++i) {
+			GameObject g = object.get(i);
+			if(g.getID() == ID.EndBG) {
 				object.remove(i);
 			}
 		}

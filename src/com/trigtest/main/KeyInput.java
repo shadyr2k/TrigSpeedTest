@@ -38,7 +38,6 @@ public class KeyInput extends KeyAdapter {
 	public void keyPressed(KeyEvent e){
 		//System.out.print(e.getKeyChar() + " ");
 		if(game.gameState == STATE.Game) {
-			Menu.confetti = new FadingImage(Menu.resize(new ImageIcon("assets/gameWin.gif").getImage(), 634, 641));
 			if(!dontPress) {
 				if(Problem.drawString && e.getKeyChar() == '/') Problem.printString += "/"; 
 				else if(Problem.drawString && e.getKeyChar() == '-') Problem.printString += "-";

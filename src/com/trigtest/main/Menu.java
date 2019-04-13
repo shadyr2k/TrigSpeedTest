@@ -1,18 +1,9 @@
 package com.trigtest.main;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +15,7 @@ import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 
 import com.trigtest.main.Game.STATE;
+import javafx.scene.shape.Circle;
 import org.newdawn.slick.openal.Audio;
 
 public class Menu extends MouseAdapter {
@@ -32,7 +24,9 @@ public class Menu extends MouseAdapter {
 	private Handler handler;
 
 	public static FadingImage confetti;
-	public static boolean drawConfetti = true;
+	boolean drawConfetti = true;
+	boolean playEndSound = true;
+	public static boolean fadeConfetti = true;
 	public static boolean drawEnd = true;
 
 	public Menu(Game game, Handler handler) {
@@ -51,6 +45,7 @@ public class Menu extends MouseAdapter {
 	static int amtOfQ = 30;
 
 	static boolean sound = true;
+	static boolean paused = false;
 
 	int page = 0; //tutorial pages
 	Page onPage;
@@ -75,10 +70,10 @@ public class Menu extends MouseAdapter {
 	private Rectangle options = new Rectangle(238, 280, 171, 41);
 	private Rectangle play = new Rectangle(278, 179, 88, 41);
 
-	private Rectangle bg0r = new Rectangle(Game.WIDTH/5 - 25 - 3, 500 - 3, 106, 106);
-	private Rectangle bg1r = new Rectangle(2*Game.WIDTH/5 - 25 - 3, 500 - 3, 106, 106);
-	private Rectangle bg2r = new Rectangle(3*Game.WIDTH/5 - 25 - 3, 500 - 3, 106, 106);
-	private Rectangle bg3r = new Rectangle(4*Game.WIDTH/5 - 25 - 3, 500 - 3, 106, 106);
+	private Rectangle bg0r = new Rectangle(Game.WIDTH/5 - 50 - 3, 500 - 3, 106, 106);
+	private Rectangle bg1r = new Rectangle(2*Game.WIDTH/5 - 50 - 3, 500 - 3, 106, 106);
+	private Rectangle bg2r = new Rectangle(3*Game.WIDTH/5 - 50 - 3, 500 - 3, 106, 106);
+	private Rectangle bg3r = new Rectangle(4*Game.WIDTH/5 - 50 - 3, 500 - 3, 106, 106);
 
 	private Rectangle tutorial = new Rectangle(429, 356, 102, 18);
 	
@@ -127,6 +122,9 @@ public class Menu extends MouseAdapter {
 	private Rectangle next = new Rectangle(465, 550, 150, 75);
 	private Rectangle menu = new Rectangle(243, 564, 154, 48);
 
+	private Rectangle volumeSliderHitbox = new Rectangle(69, 442, 133, 20);
+	private Shape volumeSlider = new Ellipse2D.Double(201, 442, 20, 20);
+
 	public void mousePressed(MouseEvent e) {
 		int mouseX = e.getX();
 		int mouseY = e.getY();
@@ -144,8 +142,10 @@ public class Menu extends MouseAdapter {
 			} else if(mouseOver(mouseX, mouseY, play)) {
 				game.gameState = STATE.Game;
 				handler.addObject(new Problem(0, 0, ID.Problem));
-				AudioPlayer.stop("backgroundLoop");
-				AudioPlayer.getMusic("gameLoop").loop();
+				if(sound){
+					AudioPlayer.stop("backgroundLoop");
+					AudioPlayer.getMusic("gameLoop").loop();
+				}
 				time = KeyInput.interval;
 			}
 		} else if(game.gameState == STATE.Options) {
@@ -183,12 +183,19 @@ public class Menu extends MouseAdapter {
 				selectedSound = on;
 				sound = true;
 				AudioPlayer.loadMusic();
-				AudioPlayer.getMusic("backgroundLoop").loop();
+				if(!paused)
+					AudioPlayer.getMusic("backgroundLoop").loop();
+				else AudioPlayer.getMusic("backgroundLoop").resume();
 			} else if(mouseOver(mouseX, mouseY, off) && !selectedSound.equals(off)) {
 				selectedSound = off;
-				sound = false;
-				AudioPlayer.stop("backgroundLoop");
+				sound = false; paused = true;
+				AudioPlayer.pause("backgroundLoop");
 				AudioPlayer.resetSound();
+			} else if(mouseOver(mouseX, mouseY, volumeSliderHitbox) && selectedSound.equals(on)){
+				if(sound) {
+					AudioPlayer.setVolume((float) (mouseX - 69) / (float) 133);
+					volumeSlider = new Ellipse2D.Double(mouseX - 10, 442, 20, 20);
+				}
 			} else if(mode == 0) {
 				if(mouseOver(mouseX, mouseY, minutesTop)) {
 					if(minutes == 9) minutes = 0;
@@ -233,6 +240,11 @@ public class Menu extends MouseAdapter {
 
 		} else if(game.gameState == STATE.End) {
 			if(mouseOver(mouseX, mouseY, endBack)) {
+				handler.clearEndBG();
+				if(sound) {
+					if(AudioPlayer.getSound("win").playing()) AudioPlayer.getSound("win").stop();
+					AudioPlayer.getMusic("backgroundLoop").loop();
+				}
 				game.gameState = STATE.Menu;
 			}
 		}
@@ -242,6 +254,8 @@ public class Menu extends MouseAdapter {
 		Graphics2D g2d = (Graphics2D) g;
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		try {
 			if(game.gameState == STATE.Menu) {
 				Font font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/math-menu-bold.otf"));
@@ -304,9 +318,6 @@ public class Menu extends MouseAdapter {
 				g2d.setFont(font.deriveFont(12.0f)); //additional text
 				g2d.drawString("version 0.1.0", 45, 600);
 				
-				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-				g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-				
 				if(drawTemp) 
 					g2d.drawImage(resize(new ImageIcon("assets/sprites/back_button/back_" + i + ".png").getImage(), 88, 70), 40, 38, null);
 				backButton(g2d, 40, 38);
@@ -346,8 +357,10 @@ public class Menu extends MouseAdapter {
 				
 				g2d.drawString("On", Game.WIDTH/10 - m2.stringWidth("On")/2, 414);
 				g2d.drawString("Off", 3*Game.WIDTH/10 - m2.stringWidth("Off")/2, 414);
-				
-				
+
+				g2d.drawLine(70, 452, 200, 452);
+				g2d.fill(volumeSlider);
+
 				Image bg0 = resize(new ImageIcon("assets/bg0_icon.png").getImage(), 100, 100);
 				Image bg1 = resize(new ImageIcon("assets/bg1_icon.png").getImage(), 100, 100);
 				Image bg2 = resize(new ImageIcon("assets/bg2_icon.png").getImage(), 100, 100);
@@ -391,13 +404,29 @@ public class Menu extends MouseAdapter {
 			
 			}
 			if(game.gameState == STATE.End) {
-				if(drawEnd){
+				if(playEndSound && sound){
+					AudioPlayer.stop("gameLoop");
+					AudioPlayer.getSound("win").play();
+					playEndSound = false;
+				}
+				if(drawEnd)
 					handler.addObject(new EndBG(0, 0, ID.EndBG, mode, handler));
+
+				//if(drawConfetti){
+					confetti = new FadingImage(Menu.resize(new ImageIcon("assets/gameWin.gif").getImage(), 634, 641));
+					drawConfetti = false;
+				//}
+				confetti.drawFadingImage(g2d);
+				if(fadeConfetti){
+					new Timer().schedule(
+							new TimerTask(){
+								public void run(){
+									confetti.fadeImage();
+								}
+							}, 1000
+					);
 				}
 
-				confetti.drawFadingImage(g2d);
-				if(drawConfetti)
-					confetti.fadeImage();
 			}
 			if(game.gameState == STATE.Tutorial) {
 				Font font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/math-credits.otf"));

@@ -10,7 +10,7 @@ public class FadingImage {
     private Image image;
 
     private final long fadeTime = 1000;
-    private float alpha = 0f;
+    private float alpha = 1f;
     private long startTime = -1;
 
     Timer timer = new Timer(40, new ActionListener() {
@@ -24,7 +24,7 @@ public class FadingImage {
                     startTime = -1;
                     ((Timer) e.getSource()).stop();
                     alpha = 0f;
-                    Menu.drawConfetti = false;
+                    Menu.fadeConfetti = false;
                 } else
                     alpha = 1f - ((float) timeElapsed / (float) fadeTime);
             }
@@ -39,26 +39,6 @@ public class FadingImage {
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         g2d.drawImage(image, 0, 0, null);
     }
-
-    public void decrAlpha(Float f){
-        while(Float.compare(f, 0f) > 0) {
-            new java.util.Timer().schedule(
-                    new java.util.TimerTask() {
-                        public void run() {
-                            alpha -= f;
-                        }
-                    }, 500
-            );
-            System.out.println(alpha);
-        }
-        delFadingImage();
-    }
-
-    private void delFadingImage(){
-        image = new ImageIcon("assets/blank_.png").getImage();
-    }
-
-    public Float getAlpha(){ return alpha; }
 
     public void fadeImage(){
         timer.start();

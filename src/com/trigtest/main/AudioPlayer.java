@@ -18,10 +18,10 @@ public class AudioPlayer {
 
             soundMap.put("pass", new Sound("assets/sound/pass.ogg"));
             soundMap.put("fail", new Sound("assets/sound/fail.ogg"));
+            soundMap.put("win", new Sound("assets/sound/applause.ogg"));
         } catch(Exception e){
             e.printStackTrace();
         }
-
     }
 
     public static Music getMusic(String k){
@@ -31,10 +31,18 @@ public class AudioPlayer {
         return soundMap.get(k);
     }
 
+    public static void pause(String s){
+        musicMap.get(s).pause();
+    }
+
     public static void stop(String s){
         musicMap.get(s).stop();
     }
 
+    public static void setVolume(float vol){
+        for(int i = 0; i < musicMap.size(); ++i)
+            musicMap.get((musicMap.keySet().toArray())[i]).setVolume(vol);
+    }
     public static void resetSound(){
         musicMap.clear();
         soundMap.clear();
