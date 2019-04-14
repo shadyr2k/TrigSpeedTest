@@ -89,6 +89,7 @@ public class Game extends Canvas implements Runnable {
 	}
 	
 	public Game() {
+		System.setProperty("java.library.path", "C:/Users/Carsten/Downloads/lwjgl-2.9.3/lwjgl-2.9.3/native/windows");
 		new Window(WIDTH, HEIGHT, "Trigonometry Speed Tests", this);
 
 		handler = new Handler();

@@ -40,10 +40,24 @@ public class Problem extends GameObject {
 
 	public Problem(int x, int y, ID id) {
 		super(x, y, id);
+		drawString = true;
+		generateNewQuestion = true;
+		interpretAnswer = false;
+		startTimer = false;
+		solved = "";
+		newQuestion = "";
+		image = null;
+		correctString = "";
 		n_correct = 0;
 		n_incorrect = 0;
 		n_ofQuestions = 0;
 		count = 0;
+
+		KeyInput.previousQuestion = "";
+		KeyInput.previousAnswer = "";
+		KeyInput.previousAnswer_1 = "";
+		KeyInput.correctAnswer = "";
+		KeyInput.color = new Color(0, 0, 0, 0);
 	}
 	
 	public void render(Graphics g) {
@@ -151,7 +165,7 @@ public class Problem extends GameObject {
 		}	
 	}
 	
-	private static HashMap<String, String> radDeg = new HashMap<String, String>();
+	private static HashMap<String, String> radDeg = new HashMap<>();
 	
 	/**
 	 * subroutine for getting a random function (i.e. the one displayed on screen for the user to answer)

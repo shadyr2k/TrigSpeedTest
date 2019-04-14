@@ -19,6 +19,7 @@ public class AudioPlayer {
             soundMap.put("pass", new Sound("assets/sound/pass.ogg"));
             soundMap.put("fail", new Sound("assets/sound/fail.ogg"));
             soundMap.put("win", new Sound("assets/sound/applause.ogg"));
+            soundMap.put("press", new Sound("assets/sound/buttonPress.ogg"));
         } catch(Exception e){
             e.printStackTrace();
         }

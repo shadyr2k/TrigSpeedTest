@@ -24,6 +24,7 @@ public class FadingImage {
                     startTime = -1;
                     ((Timer) e.getSource()).stop();
                     alpha = 0f;
+                    image = new ImageIcon("assets/blank_.png").getImage();
                     Menu.fadeConfetti = false;
                 } else
                     alpha = 1f - ((float) timeElapsed / (float) fadeTime);
@@ -38,6 +39,7 @@ public class FadingImage {
     public void drawFadingImage(Graphics2D g2d){
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         g2d.drawImage(image, 0, 0, null);
+        System.out.println("drawing image");
     }
 
     public void fadeImage(){

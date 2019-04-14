@@ -9,14 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 
 import com.trigtest.main.Game.STATE;
-import javafx.scene.shape.Circle;
-import org.newdawn.slick.openal.Audio;
 
 public class Menu extends MouseAdapter {
 	
@@ -24,10 +19,11 @@ public class Menu extends MouseAdapter {
 	private Handler handler;
 
 	public static FadingImage confetti;
-	boolean drawConfetti = true;
-	boolean playEndSound = true;
 	public static boolean fadeConfetti = true;
 	public static boolean drawEnd = true;
+
+	boolean drawConfetti = true;
+	boolean playEndSound = true;
 
 	public Menu(Game game, Handler handler) {
 		this.game = game;
@@ -38,6 +34,8 @@ public class Menu extends MouseAdapter {
 	static Image image = null;
 	static boolean reverse = false;
 	static boolean drawTemp = true;
+
+	private int bgCoverX = 340;
 
 	//ACTUAL DEFAULT VALUES STORED HERE
 	static int difficulty = 1; //0 = normal, 1 = hard, 2 = abyssal
@@ -141,22 +139,32 @@ public class Menu extends MouseAdapter {
 				game.gameState = STATE.Options;
 			} else if(mouseOver(mouseX, mouseY, play)) {
 				game.gameState = STATE.Game;
+				fadeConfetti = true;
+				confetti = new FadingImage(new ImageIcon("assets/gameWin1.gif").getImage());
 				handler.addObject(new Problem(0, 0, ID.Problem));
 				if(sound){
 					AudioPlayer.stop("backgroundLoop");
 					AudioPlayer.getMusic("gameLoop").loop();
+					playEndSound = true;
 				}
+				KeyInput.timer = new Timer();
+				time = minutes*60 + Integer.parseInt(Menu.seconds1 + "" + Menu.seconds2);
+				KeyInput.interval = (time < 1) ? 1 : time;
 				time = KeyInput.interval;
 			}
 		} else if(game.gameState == STATE.Options) {
 			if(mouseOver(mouseX, mouseY, bg0r)) {
 				BG.background = 0;
+				bgCoverX = 80;
 			} else if(mouseOver(mouseX, mouseY, bg1r)) {
 				BG.background = 1;
+				bgCoverX = 210;
 			} else if(mouseOver(mouseX, mouseY, bg2r)) {
 				BG.background = 2;
+				bgCoverX = 340;
 			} else if(mouseOver(mouseX, mouseY, bg3r)) {
 				BG.background = 3;
+				bgCoverX = 470;
 			} else if(mouseOver(mouseX, mouseY, backButton)) { 
 				game.gameState = STATE.Menu;
 			} else if(mouseOver(mouseX, mouseY, tutorial)) {
@@ -182,7 +190,6 @@ public class Menu extends MouseAdapter {
 			} else if(mouseOver(mouseX, mouseY, on) && !selectedSound.equals(on)) {
 				selectedSound = on;
 				sound = true;
-				AudioPlayer.loadMusic();
 				if(!paused)
 					AudioPlayer.getMusic("backgroundLoop").loop();
 				else AudioPlayer.getMusic("backgroundLoop").resume();
@@ -190,7 +197,6 @@ public class Menu extends MouseAdapter {
 				selectedSound = off;
 				sound = false; paused = true;
 				AudioPlayer.pause("backgroundLoop");
-				AudioPlayer.resetSound();
 			} else if(mouseOver(mouseX, mouseY, volumeSliderHitbox) && selectedSound.equals(on)){
 				if(sound) {
 					AudioPlayer.setVolume((float) (mouseX - 69) / (float) 133);
@@ -199,36 +205,36 @@ public class Menu extends MouseAdapter {
 			} else if(mode == 0) {
 				if(mouseOver(mouseX, mouseY, minutesTop)) {
 					if(minutes == 9) minutes = 0;
-					else ++minutes;
+					else ++minutes; AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, minutesBottom)) {
 					if(minutes == 0) minutes = 9;
-					else --minutes;
+					else --minutes; AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, seconds1Top)) {
 					if(seconds1 == 5) seconds1 = 0;
-					else ++seconds1;
+					else ++seconds1; AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, seconds1Bottom)) {
 					if(seconds1 == 0) seconds1 = 5;
-					else --seconds1;
+					else --seconds1; AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, seconds2Top)) {
 					if(seconds2 == 9) seconds2 = 0;
-					else ++seconds2;
+					else ++seconds2; AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, seconds2Bottom)) {
 					if(seconds2 == 0) seconds2 = 9;
-					else --seconds2;
+					else --seconds2; AudioPlayer.getSound("press").play();
 				}
 			} else if(mode == 1) {
 				if(mouseOver(mouseX, mouseY, tensTop)) {
 					if(tens == 9) tens = 0;
-					else ++tens;
+					else ++tens; AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, tensBottom)) {
 					if(tens == 0) tens = 9;
-					else --tens;
+					else --tens; AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, onesTop)) {
 					if(ones == 9) ones = 0;
-					else ++ones;
+					else ++ones; AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, onesBottom)) {
 					if(ones == 0) ones = 9;
-					else --ones;	
+					else --ones; AudioPlayer.getSound("press").play();
 				}
 			}
 		} else if(game.gameState == STATE.Tutorial) {
@@ -241,6 +247,7 @@ public class Menu extends MouseAdapter {
 		} else if(game.gameState == STATE.End) {
 			if(mouseOver(mouseX, mouseY, endBack)) {
 				handler.clearEndBG();
+				drawEnd = true;
 				if(sound) {
 					if(AudioPlayer.getSound("win").playing()) AudioPlayer.getSound("win").stop();
 					AudioPlayer.getMusic("backgroundLoop").loop();
@@ -294,6 +301,7 @@ public class Menu extends MouseAdapter {
 				g2d.drawString("Programming", 40, 310);
 				g2d.drawString("Testing", 410, 310);
 				g2d.drawString("Special Thanks", 40, 420);
+				g2d.drawString("Sound", 430, 510);
 				
 				g2d.setFont(font.deriveFont(18.0f)); //names
 				g2d.drawString("Mari Yanagawa", 45, 200);
@@ -314,8 +322,11 @@ public class Menu extends MouseAdapter {
 				g2d.drawString("Carsten Streichardt", 360, 220);
 				
 				g2d.drawString("TBD", 410, 350);
-				
+
 				g2d.setFont(font.deriveFont(12.0f)); //additional text
+				g2d.drawString("Menu: EPSSounds - Shallow", 390, 530);
+				g2d.drawString("Water Game Loop", 390, 545);
+				g2d.drawString("Game: Kevin MacLeod - Artifact", 390, 560);
 				g2d.drawString("version 0.1.0", 45, 600);
 				
 				if(drawTemp) 
@@ -365,7 +376,8 @@ public class Menu extends MouseAdapter {
 				Image bg1 = resize(new ImageIcon("assets/bg1_icon.png").getImage(), 100, 100);
 				Image bg2 = resize(new ImageIcon("assets/bg2_icon.png").getImage(), 100, 100);
 				Image bg3 = resize(new ImageIcon("assets/bg3_icon.png").getImage(), 100, 100);
-				
+				Image bgCover = new ImageIcon("assets/bgCover.png").getImage();
+
 				g2d.fillRect(Game.WIDTH/5 - bg0.getWidth(null)/2 - 3, 500 - 3, 106, 106);
 				g2d.fillRect(2*Game.WIDTH/5 - bg0.getWidth(null)/2 - 3, 500 - 3, 106, 106);
 				g2d.fillRect(3*Game.WIDTH/5 - bg0.getWidth(null)/2 - 3, 500 - 3, 106, 106);
@@ -375,6 +387,7 @@ public class Menu extends MouseAdapter {
 				g2d.drawImage(bg1, 2*Game.WIDTH/5 - bg1.getWidth(null)/2, 500, null);
 				g2d.drawImage(bg2, 3*Game.WIDTH/5 - bg2.getWidth(null)/2, 500, null);
 				g2d.drawImage(bg3, 4*Game.WIDTH/5 - bg3.getWidth(null)/2, 500, null);
+				g2d.drawImage(bgCover, bgCoverX, 500, null);
 				
 				Font font2 = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/bahnschrift.ttf"));
 				ge.registerFont(font2);
@@ -387,10 +400,6 @@ public class Menu extends MouseAdapter {
 					g2d.drawString(Integer.toString(minutes),  minutes_0.x + (minutes_0.width - m3.stringWidth(Integer.toString(minutes))) / 2, 377);
 					g2d.drawString(Integer.toString(seconds1), seconds1_0.x + (seconds1_0.width - m3.stringWidth(Integer.toString(seconds1))) / 2, 377);
 					g2d.drawString(Integer.toString(seconds2), seconds2_0.x + (seconds2_0.width - m3.stringWidth(Integer.toString(seconds2))) / 2, 377);
-					
-					int time = Menu.minutes*60 + Integer.parseInt(Menu.seconds1 + "" + Menu.seconds2);
-					KeyInput.interval = (time < 1) ? 1 : time;
-					
 				} else if(mode == 1) {
 					Image questionPanel = resize(new ImageIcon("assets/sprites/camille.png").getImage(), 172, 99);
 					g2d.drawImage(questionPanel, 240, 315, null);
@@ -404,6 +413,7 @@ public class Menu extends MouseAdapter {
 			
 			}
 			if(game.gameState == STATE.End) {
+				confetti.drawFadingImage(g2d);
 				if(playEndSound && sound){
 					AudioPlayer.stop("gameLoop");
 					AudioPlayer.getSound("win").play();
@@ -412,22 +422,17 @@ public class Menu extends MouseAdapter {
 				if(drawEnd)
 					handler.addObject(new EndBG(0, 0, ID.EndBG, mode, handler));
 
-				//if(drawConfetti){
-					confetti = new FadingImage(Menu.resize(new ImageIcon("assets/gameWin.gif").getImage(), 634, 641));
-					drawConfetti = false;
-				//}
-				confetti.drawFadingImage(g2d);
 				if(fadeConfetti){
 					new Timer().schedule(
 							new TimerTask(){
 								public void run(){
 									confetti.fadeImage();
 								}
-							}, 1000
+							}, 6500
 					);
 				}
-
 			}
+
 			if(game.gameState == STATE.Tutorial) {
 				Font font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/math-credits.otf"));
 				Font font1 = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/math-menu-bold.otf"));

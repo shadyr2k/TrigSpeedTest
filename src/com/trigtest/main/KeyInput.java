@@ -13,8 +13,6 @@ import com.trigtest.main.Game.STATE;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
-import javax.swing.*;
-
 public class KeyInput extends KeyAdapter {
 	
 	private Game game;
