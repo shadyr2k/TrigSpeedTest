@@ -6,20 +6,19 @@ import java.util.LinkedList;
 public class Handler {
 
 	private LinkedList<GameObject> object = new LinkedList<>();
-	public void tick(){
+	void tick(){
 		for(GameObject o : object){
 			o.tick();
 		}
 	}
 	
-	public void render(Graphics g){
-		for(int i = 0; i < object.size(); ++i){
-			GameObject temp = object.get(i);
-			temp.render(g);
+	void render(Graphics g){
+		for (GameObject o : object) {
+			o.render(g);
 		}
 	}
 	
-	public void addObject(GameObject obj){
+	void addObject(GameObject obj){
 		this.object.add(obj);
 	}
 	
@@ -28,7 +27,7 @@ public class Handler {
 	}
 
 	//cant remove wtf
-	public void clearGame() {
+	void clearGame() {
 		for(int i = 0; i < object.size(); ++i) {
 			GameObject g = object.get(i);
 			if(g.getID() == ID.Problem) {
@@ -36,7 +35,7 @@ public class Handler {
 			}
 		}
 	}
-	public void clearEndBG() {
+	void clearEndBG() {
 		for(int i = 0; i < object.size(); ++i) {
 			GameObject g = object.get(i);
 			if(g.getID() == ID.EndBG) {

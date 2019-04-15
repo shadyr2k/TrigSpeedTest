@@ -5,18 +5,18 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Page {
+class Page {
     private int page;
     private Graphics2D g2d;
     private final static int pageCount = 5;
 
     private ArrayList<Image> picList = new ArrayList<>();
 
-    public Page(Graphics2D g2d, int page){
+    Page(Graphics2D g2d, int page){
         this.page = page;
         this.g2d = g2d;
     }
-    public void drawPage(){
+    void drawPage(){
         for(int i = 0; i <= pageCount; ++i){
             picList.add(resize(new ImageIcon("assets/pages/" + i + ".png").getImage()));
         }

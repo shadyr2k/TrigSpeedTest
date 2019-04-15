@@ -40,6 +40,8 @@ public class Problem extends GameObject {
 
 	public Problem(int x, int y, ID id) {
 		super(x, y, id);
+
+		//reset everything
 		drawString = true;
 		generateNewQuestion = true;
 		interpretAnswer = false;
@@ -79,7 +81,7 @@ public class Problem extends GameObject {
 			FontMetrics m = g2d.getFontMetrics();	
 			int setX = baseRectangle.x + (baseRectangle.width - m.stringWidth(printString)) / 2;
 			int setY = baseRectangle.y + ((baseRectangle.height - m.getHeight()) / 2) + m.getAscent();
-			
+
 			if(m.stringWidth(printString) > 225) drawString = false;
 			else drawString = true;
 			g2d.setColor(Color.BLACK);
@@ -153,8 +155,7 @@ public class Problem extends GameObject {
 			FontMetrics m2 = g2d.getFontMetrics();
 			
 			if(Menu.mode == 0) {
-				if(n_ofQuestions == 1) startTimer = true;
-				else startTimer = false;
+				startTimer = n_ofQuestions == 1;
 				g2d.drawString(toMS(KeyInput.interval), 590 - m2.stringWidth(toMS(KeyInput.interval)), 75);
 			}
 			String questionN = (Menu.mode != 1) ? "question " + n_ofQuestions : "question " + n_ofQuestions + "/" + Menu.amtOfQ;
@@ -233,7 +234,7 @@ public class Problem extends GameObject {
 	 * @param s: string to parse and/or solve
 	 * @return the solved string
 	 */
-	public static String solve(String s) {
+	private static String solve(String s) {
 		for(String st : KeyInput.zeroArray) {
 			if(s.equals(st)) {
 				return "0";
@@ -283,7 +284,7 @@ public class Problem extends GameObject {
 		return String.valueOf(e.evaluate());
 	}
 	
-	public static String toMS(int i) {
+	static String toMS(int i) {
 		int m = i/60;
 		int s = i%60;
 		String sec = (s <= 9) ? "0"+s : ""+s;

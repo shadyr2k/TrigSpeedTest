@@ -5,21 +5,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class FadingImage {
+class FadingImage {
 
     private Image image;
 
-    private final long fadeTime = 1000;
     private float alpha = 1f;
     private long startTime = -1;
 
-    Timer timer = new Timer(40, new ActionListener() {
+    private Timer timer = new Timer(40, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             if(startTime < 0) startTime = System.currentTimeMillis();
             else {
                 long time = System.currentTimeMillis();
                 long timeElapsed = time - startTime;
+                long fadeTime = 1000;
                 if(timeElapsed >= fadeTime){
                     startTime = -1;
                     ((Timer) e.getSource()).stop();
@@ -32,17 +32,17 @@ public class FadingImage {
         }
     });
 
-    public FadingImage(Image image){
+    FadingImage(Image image){
         this.image = image;
     }
 
-    public void drawFadingImage(Graphics2D g2d){
+    void drawFadingImage(Graphics2D g2d){
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         g2d.drawImage(image, 0, 0, null);
         System.out.println("drawing image");
     }
 
-    public void fadeImage(){
+    void fadeImage(){
         timer.start();
     }
 }

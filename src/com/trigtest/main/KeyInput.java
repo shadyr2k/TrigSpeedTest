@@ -131,7 +131,7 @@ public class KeyInput extends KeyAdapter {
 		return String.valueOf(e.evaluate());
 	}
 	
-	public void startTheTimer() {
+	private void startTheTimer() {
 		timer.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
 				System.out.println(setInterval());
@@ -139,7 +139,7 @@ public class KeyInput extends KeyAdapter {
 		}, 1000, 1000);
 	}
 	
-	public final int setInterval() {
+	private int setInterval() {
 		if(interval == 1) {
 			game.gameState = STATE.End;
 			timer.cancel(); //end game
@@ -173,7 +173,7 @@ public class KeyInput extends KeyAdapter {
 			case "5.4978": return "7π/4";
 			case "5.7596": return "11π/6";
 			case "6.2832": return "2π";
-			case "-0.5": return "1/2";
+			case "-0.5": return "-1/2";
 			case "-0.7071": return "-1/√2 or √2/2";
 			case "-0.866": return "-√3/2";
 			case "-0.5774": return "-1/√3 or -√3/3";

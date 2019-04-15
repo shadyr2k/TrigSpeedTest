@@ -18,22 +18,23 @@ public class Menu extends MouseAdapter {
 	private Game game;
 	private Handler handler;
 
-	public static FadingImage confetti;
-	public static boolean fadeConfetti = true;
-	public static boolean drawEnd = true;
+	private static FadingImage confetti;
 
-	boolean drawConfetti = true;
-	boolean playEndSound = true;
+	static boolean fadeConfetti = true;
+	static boolean drawEnd = true;
 
-	public Menu(Game game, Handler handler) {
+	//boolean drawConfetti = true;
+	private boolean playEndSound = true;
+
+	Menu(Game game, Handler handler) {
 		this.game = game;
 		this.handler = handler;
 	}
 
-	static int i = 1;
-	static Image image = null;
-	static boolean reverse = false;
-	static boolean drawTemp = true;
+	private static int i = 1;
+	private static Image image = null;
+	private static boolean reverse = false;
+	private static boolean drawTemp = true;
 
 	private int bgCoverX = 340;
 
@@ -43,19 +44,18 @@ public class Menu extends MouseAdapter {
 	static int amtOfQ = 30;
 
 	static boolean sound = true;
-	static boolean paused = false;
+	private static boolean paused = false;
 
-	int page = 0; //tutorial pages
-	Page onPage;
+	private int page = 0; //tutorial pages
 
 	static int time;
 	
-	static int minutes = 5;
-	static int seconds1 = 0;
-	static int seconds2 = 0;
+	private static int minutes = 5;
+	private static int seconds1 = 0;
+	private static int seconds2 = 0;
 	
-	static int tens = 3;
-	static int ones = 0;
+	private static int tens = 3;
+	private static int ones = 0;
 	
 	//hitboxes (options page)
 	private Rectangle baseRectangleHigh = new Rectangle(Game.WIDTH/2 - 125, 120, 250, 90);
@@ -257,7 +257,7 @@ public class Menu extends MouseAdapter {
 		}
 	} 
 	
-	public void render(Graphics g) {
+	void render(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -449,7 +449,7 @@ public class Menu extends MouseAdapter {
 
 				g2d.drawString("menu", 250, 600);
 
-				onPage = new Page(g2d, page);
+				Page onPage = new Page(g2d, page);
 				onPage.drawPage();
 
 				//backButton(g2d);
@@ -462,14 +462,12 @@ public class Menu extends MouseAdapter {
 
 	private boolean mouseOver(int mouseX, int mouseY, Rectangle r) {
 		if(mouseX > r.getX() && mouseX < r.getX() + r.getWidth()) {
-			if(mouseY > r.getY() && mouseY < r.getY() + r.getHeight())
-				return true;
-			return false;
+			return mouseY > r.getY() && mouseY < r.getY() + r.getHeight();
 		}
 		return false;
 	}
 	
-	public static Image resize(Image i, int w, int h) {
+	private static Image resize(Image i, int w, int h) {
 		BufferedImage r = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 	    Graphics2D g2d = r.createGraphics();
 	    g2d.drawImage(i, 0, 0, w, h, null);
@@ -477,7 +475,7 @@ public class Menu extends MouseAdapter {
 	    return r; 
 	}
 	
-	public static void backButton(Graphics2D g2d, int x, int y) {
+	static void backButton(Graphics2D g2d, int x, int y) {
 		if(i > 25) reverse = true;
 		else if(i < 2) reverse = false;
 		

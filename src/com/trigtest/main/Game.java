@@ -6,7 +6,7 @@ import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable {
 	
-	public static final int WIDTH = 650, HEIGHT = 680;
+	static final int WIDTH = 650, HEIGHT = 680;
 	
 	private static final long serialVersionUID = 7676616993152955582L;
 	private Thread thread;
@@ -24,15 +24,15 @@ public class Game extends Canvas implements Runnable {
 		End
 	}
 	
-	public STATE gameState = STATE.Menu;
+	STATE gameState = STATE.Menu;
 	
-	public synchronized void start(){
+	synchronized void start(){
 		thread = new Thread(this);
 		thread.start();
 		running = true;
 	}
 	
-	public synchronized void stop(){
+	private synchronized void stop(){
 		try {
 			thread.join();
 			running = false;

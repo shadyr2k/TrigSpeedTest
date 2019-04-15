@@ -8,7 +8,7 @@ public class EndBG extends GameObject {
     private int gameMode;
     private Handler handler;
 
-    public EndBG(int x, int y, ID id, int gameMode, Handler handler) {
+    EndBG(int x, int y, ID id, int gameMode, Handler handler) {
         super(x, y, id);
         this.gameMode = gameMode;
         this.handler = handler;
