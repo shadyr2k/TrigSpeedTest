@@ -20,7 +20,13 @@ class AudioPlayer {
             soundMap.put("fail", new Sound("assets/sound/fail.ogg"));
             soundMap.put("win", new Sound("assets/sound/applause.ogg"));
             soundMap.put("press", new Sound("assets/sound/buttonPress.ogg"));
+            soundMap.put("back", new Sound("assets/sound/back.ogg"));
             soundMap.put("menuPress", new Sound("assets/sound/menuPress.ogg"));
+            soundMap.put("menuPlayPress", new Sound("assets/sound/menuPlayPress.ogg"));
+            soundMap.put("menuSelectionPress", new Sound("assets/sound/menuSelectionPress.ogg"));
+            soundMap.put("tutorialPress", new Sound("assets/sound/tutorialPress.ogg"));
+            soundMap.put("bgPress", new Sound("assets/sound/backgroundPress.ogg"));
+            soundMap.put("bye", new Sound("assets/sound/bye.ogg"));
         } catch(Exception e){
             e.printStackTrace();
         }

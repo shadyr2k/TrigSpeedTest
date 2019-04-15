@@ -45,6 +45,7 @@ public class Menu extends MouseAdapter {
 
 	static boolean sound = true;
 	private static boolean paused = false;
+	private float volume = 1f;
 
 	private int page = 0; //tutorial pages
 
@@ -126,25 +127,39 @@ public class Menu extends MouseAdapter {
 	public void mousePressed(MouseEvent e) {
 		int mouseX = e.getX();
 		int mouseY = e.getY();
+
 		if(game.gameState == STATE.Credits) {
-			if(mouseOver(mouseX, mouseY, backButton)) { 
+			if(mouseOver(mouseX, mouseY, backButton)) {
+				if(sound) AudioPlayer.getSound("back").play();
 				game.gameState = STATE.Menu;
 			}
 		} else if(game.gameState == STATE.Menu) {
-			if(mouseOver(mouseX, mouseY, quit)) { 
-				System.exit(-420);
+			if(mouseOver(mouseX, mouseY, quit)) {
+				if(sound) {
+					AudioPlayer.getMusic("backgroundLoop").stop();
+					AudioPlayer.getSound("menuPress").play();
+					AudioPlayer.getSound("bye").play();
+				}
+				new Timer().schedule(
+					new TimerTask(){
+						public void run(){
+							System.exit(-420);
+						}
+					}, 1300);
 			} else if(mouseOver(mouseX, mouseY, credits)) {
-				game.gameState = STATE.Credits;
+				game.gameState = STATE.Credits; if(sound) AudioPlayer.getSound("menuPress").play();
 			} else if(mouseOver(mouseX, mouseY, options)) {
-				game.gameState = STATE.Options;
+				game.gameState = STATE.Options; if(sound) AudioPlayer.getSound("menuPress").play();
 			} else if(mouseOver(mouseX, mouseY, play)) {
+				if(sound) AudioPlayer.getSound("menuPlayPress").play();
 				game.gameState = STATE.Game;
 				fadeConfetti = true;
-				confetti = new FadingImage(new ImageIcon("assets/gameWin1.gif").getImage());
+				confetti = new FadingImage(new ImageIcon("assets/gameWin.gif").getImage());
 				handler.addObject(new Problem(0, 0, ID.Problem));
 				if(sound){
 					AudioPlayer.stop("backgroundLoop");
 					AudioPlayer.getMusic("gameLoop").loop();
+					AudioPlayer.setVolume(volume);
 					playEndSound = true;
 				}
 				KeyInput.timer = new Timer();
@@ -154,40 +169,53 @@ public class Menu extends MouseAdapter {
 			}
 		} else if(game.gameState == STATE.Options) {
 			if(mouseOver(mouseX, mouseY, bg0r)) {
+				if(sound) AudioPlayer.getSound("bgPress").play();
 				BG.background = 0;
 				bgCoverX = 80;
 			} else if(mouseOver(mouseX, mouseY, bg1r)) {
+				if(sound) AudioPlayer.getSound("bgPress").play();
 				BG.background = 1;
 				bgCoverX = 210;
 			} else if(mouseOver(mouseX, mouseY, bg2r)) {
+				if(sound) AudioPlayer.getSound("bgPress").play();
 				BG.background = 2;
 				bgCoverX = 340;
 			} else if(mouseOver(mouseX, mouseY, bg3r)) {
+				if(sound) AudioPlayer.getSound("bgPress").play();
 				BG.background = 3;
 				bgCoverX = 470;
 			} else if(mouseOver(mouseX, mouseY, backButton)) { 
 				game.gameState = STATE.Menu;
+				if(sound) AudioPlayer.getSound("back").play();
 			} else if(mouseOver(mouseX, mouseY, tutorial)) {
 				game.gameState = STATE.Tutorial;
+				if(sound) AudioPlayer.getSound("menuSelectionPress").play();
 			} else if(mouseOver(mouseX, mouseY, normal)) {
 				selectedDiff = normal;
 				difficulty = 0;
+				if(sound) AudioPlayer.getSound("menuSelectionPress").play();
 			} else if(mouseOver(mouseX, mouseY, hard)) {
 				selectedDiff = hard;
 				difficulty = 1;
+				if(sound) AudioPlayer.getSound("menuSelectionPress").play();
 			} else if(mouseOver(mouseX, mouseY, abyssal)) {
 				selectedDiff = abyssal;
 				difficulty = 2;
+				if(sound) AudioPlayer.getSound("menuSelectionPress").play();
 			} else if(mouseOver(mouseX, mouseY, timed)) {
 				selectedMode = timed;
 				mode = 0;
+				if(sound) AudioPlayer.getSound("menuSelectionPress").play();
 			} else if(mouseOver(mouseX, mouseY, accuracy)) {
 				selectedMode = accuracy;
 				mode = 1;
+				if(sound) AudioPlayer.getSound("menuSelectionPress").play();
 			} else if(mouseOver(mouseX, mouseY, endless)) {
 				selectedMode = endless;
 				mode = 2;
+				if(sound) AudioPlayer.getSound("menuSelectionPress").play();
 			} else if(mouseOver(mouseX, mouseY, on) && !selectedSound.equals(on)) {
+				if(sound) AudioPlayer.getSound("menuSelectionPress").play();
 				selectedSound = on;
 				sound = true;
 				if(!paused)
@@ -199,59 +227,72 @@ public class Menu extends MouseAdapter {
 				AudioPlayer.pause("backgroundLoop");
 			} else if(mouseOver(mouseX, mouseY, volumeSliderHitbox) && selectedSound.equals(on)){
 				if(sound) {
-					AudioPlayer.setVolume((float) (mouseX - 69) / (float) 133);
+					volume = (float) (mouseX - 69) / (float) 133;
+					AudioPlayer.setVolume(volume);
 					volumeSlider = new Ellipse2D.Double(mouseX - 10, 442, 20, 20);
 				}
 			} else if(mode == 0) {
 				if(mouseOver(mouseX, mouseY, minutesTop)) {
 					if(minutes == 9) minutes = 0;
-					else ++minutes; AudioPlayer.getSound("press").play();
+					else ++minutes; if(sound) AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, minutesBottom)) {
 					if(minutes == 0) minutes = 9;
-					else --minutes; AudioPlayer.getSound("press").play();
+					else --minutes; if(sound) AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, seconds1Top)) {
 					if(seconds1 == 5) seconds1 = 0;
-					else ++seconds1; AudioPlayer.getSound("press").play();
+					else ++seconds1; if(sound) AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, seconds1Bottom)) {
 					if(seconds1 == 0) seconds1 = 5;
-					else --seconds1; AudioPlayer.getSound("press").play();
+					else --seconds1; if(sound) AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, seconds2Top)) {
 					if(seconds2 == 9) seconds2 = 0;
-					else ++seconds2; AudioPlayer.getSound("press").play();
+					else ++seconds2; if(sound) AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, seconds2Bottom)) {
 					if(seconds2 == 0) seconds2 = 9;
-					else --seconds2; AudioPlayer.getSound("press").play();
+					else --seconds2; if(sound) AudioPlayer.getSound("press").play();
 				}
 			} else if(mode == 1) {
 				if(mouseOver(mouseX, mouseY, tensTop)) {
 					if(tens == 9) tens = 0;
-					else ++tens; AudioPlayer.getSound("press").play();
+					else ++tens; if(sound) AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, tensBottom)) {
 					if(tens == 0) tens = 9;
-					else --tens; AudioPlayer.getSound("press").play();
+					else --tens; if(sound) AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, onesTop)) {
 					if(ones == 9) ones = 0;
-					else ++ones; AudioPlayer.getSound("press").play();
+					else ++ones; if(sound) AudioPlayer.getSound("press").play();
 				} else if(mouseOver(mouseX, mouseY, onesBottom)) {
 					if(ones == 0) ones = 9;
-					else --ones; AudioPlayer.getSound("press").play();
+					else --ones; if(sound) AudioPlayer.getSound("press").play();
 				}
 			}
 		} else if(game.gameState == STATE.Tutorial) {
-			if(mouseOver(mouseX, mouseY, next) && page < 5) ++page;
-			else if(mouseOver(mouseX, mouseY, next) && page == 5) game.gameState = STATE.Options;
-			else if(mouseOver(mouseX, mouseY, back) && page > 0) --page;
-			else if(mouseOver(mouseX, mouseY, menu))
+			if(mouseOver(mouseX, mouseY, next) && page < 5) {
+				if(sound) AudioPlayer.getSound("tutorialPress").play();
+				++page;
+			}
+			else if(mouseOver(mouseX, mouseY, next) && page == 5) {
+				if(sound) AudioPlayer.getSound("tutorialPress").play();
 				game.gameState = STATE.Options;
-
+			}
+			else if(mouseOver(mouseX, mouseY, back) && page > 0){
+				if(sound) AudioPlayer.getSound("tutorialPress").play();
+				--page;
+			}
+			else if(mouseOver(mouseX, mouseY, menu)){
+				if(sound) AudioPlayer.getSound("tutorialPress").play();
+				game.gameState = STATE.Options;
+			}
 		} else if(game.gameState == STATE.End) {
 			if(mouseOver(mouseX, mouseY, endBack)) {
+				if(sound) AudioPlayer.getSound("back").play();
 				handler.clearEndBG();
 				drawEnd = true;
 				if(sound) {
 					if(AudioPlayer.getSound("win").playing()) AudioPlayer.getSound("win").stop();
 					AudioPlayer.getMusic("backgroundLoop").loop();
 				}
+				AudioPlayer.setVolume(volume);
 				game.gameState = STATE.Menu;
 			}
 		}
@@ -461,9 +502,8 @@ public class Menu extends MouseAdapter {
 
 
 	private boolean mouseOver(int mouseX, int mouseY, Rectangle r) {
-		if(mouseX > r.getX() && mouseX < r.getX() + r.getWidth()) {
+		if(mouseX > r.getX() && mouseX < r.getX() + r.getWidth())
 			return mouseY > r.getY() && mouseY < r.getY() + r.getHeight();
-		}
 		return false;
 	}
 	

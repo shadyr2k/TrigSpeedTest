@@ -39,7 +39,6 @@ class FadingImage {
     void drawFadingImage(Graphics2D g2d){
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         g2d.drawImage(image, 0, 0, null);
-        System.out.println("drawing image");
     }
 
     void fadeImage(){
