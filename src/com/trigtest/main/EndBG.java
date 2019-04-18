@@ -1,22 +1,26 @@
 package com.trigtest.main;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
 public class EndBG extends GameObject {
 
-    private int gameMode;
+    private int gameMode, random;
     private Handler handler;
 
-    EndBG(int x, int y, ID id, int gameMode, Handler handler) {
+    EndBG(int x, int y, ID id, int gameMode, int random, Handler handler) {
         super(x, y, id);
         this.gameMode = gameMode;
         this.handler = handler;
+        this.random = random;
     }
 
     public void render(Graphics g) {
-        Menu.drawEnd = false;
         Graphics2D g2d = (Graphics2D) g;
+        Menu.drawEnd = false;
+        Menu.backButton(g2d, 45, 528);
+
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
@@ -28,6 +32,7 @@ public class EndBG extends GameObject {
             Font font = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/math-credits.otf"));
             Font font1 = Font.createFont(Font.TRUETYPE_FONT, new File("assets/fonts/math-menu-bold.otf"));
             ge.registerFont(font); ge.registerFont(font1);
+            g2d.drawImage(new ImageIcon("assets/sprites/end_screen/congrats_" + random + ".png").getImage(), 0, 50, null);
             if(gameMode == 0) {
                 drawEnd(g2d, font, font1);
             } else if(gameMode == 1) {
@@ -45,8 +50,6 @@ public class EndBG extends GameObject {
         } catch(Exception e){
             e.printStackTrace();
         }
-
-        Menu.backButton(g2d, 45, 528);
     }
 
     private void drawEnd(Graphics2D g2d, Font f, Font f1) {

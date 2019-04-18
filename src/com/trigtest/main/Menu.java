@@ -7,6 +7,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ImageIcon;
@@ -124,6 +125,8 @@ public class Menu extends MouseAdapter {
 	private Rectangle volumeSliderHitbox = new Rectangle(69, 442, 133, 20);
 	private Shape volumeSlider = new Ellipse2D.Double(201, 442, 20, 20);
 
+	Random random = new Random();
+	int randomImage = 0;
 	public void mousePressed(MouseEvent e) {
 		int mouseX = e.getX();
 		int mouseY = e.getY();
@@ -215,7 +218,7 @@ public class Menu extends MouseAdapter {
 				mode = 2;
 				if(sound) AudioPlayer.getSound("menuSelectionPress").play();
 			} else if(mouseOver(mouseX, mouseY, on) && !selectedSound.equals(on)) {
-				if(sound) AudioPlayer.getSound("menuSelectionPress").play();
+				AudioPlayer.getSound("menuSelectionPress").play();
 				selectedSound = on;
 				sound = true;
 				if(!paused)
@@ -368,7 +371,7 @@ public class Menu extends MouseAdapter {
 				g2d.drawString("Menu: EPSSounds - Shallow", 390, 530);
 				g2d.drawString("Water Game Loop", 390, 545);
 				g2d.drawString("Game: Kevin MacLeod - Artifact", 390, 560);
-				g2d.drawString("version 0.1.0", 45, 600);
+				g2d.drawString("version 0.2.0", 45, 600);
 				
 				if(drawTemp) 
 					g2d.drawImage(resize(new ImageIcon("assets/sprites/back_button/back_" + i + ".png").getImage(), 88, 70), 40, 38, null);
@@ -449,9 +452,7 @@ public class Menu extends MouseAdapter {
 					
 					amtOfQ = (amtOfQ < 1) ? 1 : tens*10 + ones;
 				}
-				
 				backButton(g2d, 40, 38);
-			
 			}
 			if(game.gameState == STATE.End) {
 				confetti.drawFadingImage(g2d);
@@ -460,8 +461,10 @@ public class Menu extends MouseAdapter {
 					AudioPlayer.getSound("win").play();
 					playEndSound = false;
 				}
-				if(drawEnd)
-					handler.addObject(new EndBG(0, 0, ID.EndBG, mode, handler));
+				if(drawEnd) {
+					randomImage = random.nextInt(6);
+					handler.addObject(new EndBG(0, 0, ID.EndBG, randomImage, mode, handler));
+				}
 
 				if(fadeConfetti){
 					new Timer().schedule(
