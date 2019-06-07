@@ -125,8 +125,8 @@ public class Menu extends MouseAdapter {
 	private Rectangle volumeSliderHitbox = new Rectangle(69, 442, 133, 20);
 	private Shape volumeSlider = new Ellipse2D.Double(201, 442, 20, 20);
 
-	Random random = new Random();
-	int randomImage = 0;
+	private Random random = new Random();
+
 	public void mousePressed(MouseEvent e) {
 		int mouseX = e.getX();
 		int mouseY = e.getY();
@@ -462,18 +462,22 @@ public class Menu extends MouseAdapter {
 					playEndSound = false;
 				}
 				if(drawEnd) {
-					randomImage = random.nextInt(6);
-					handler.addObject(new EndBG(0, 0, ID.EndBG, randomImage, mode, handler));
+					handler.addObject(new EndBG(0, 0, ID.EndBG, mode, random.nextInt(6), handler));
 				}
 
 				if(fadeConfetti){
-					new Timer().schedule(
+					Timer fade = new Timer();
+					fade.schedule(
 							new TimerTask(){
 								public void run(){
 									confetti.fadeImage();
 								}
 							}, 6500
 					);
+					if(game.gameState != STATE.End) {
+						fade.cancel();
+						confetti.delImage();
+					}
 				}
 			}
 

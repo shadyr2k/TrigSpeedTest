@@ -41,6 +41,10 @@ class FadingImage {
         g2d.drawImage(image, 0, 0, null);
     }
 
+    void delImage() {
+        image = new ImageIcon("assets/blank_.png").getImage();
+        timer.stop();
+    }
     void fadeImage(){
         timer.start();
     }
